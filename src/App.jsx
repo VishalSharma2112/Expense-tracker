@@ -9,11 +9,12 @@ function Header({name, lastName, Expense}) {
   )
 }
 
-function ExpenseItem({id, name, amount, onDelete}) {
+function ExpenseItem({id, name, amount, onDelete, onEdit}) {
   return (
     <div>
       <p>ID={id}, Name={name}, Amount={amount}</p>
       <button onClick={() => onDelete(id)}>Delete</button>
+      <button onClick={() => onEdit(id)}>Edit</button>
     </div>
   )
 }
@@ -29,6 +30,7 @@ function summation(expenseList) {
 function App() {
   const [expenseName, setExpenseName] = useState("")
   const [expenseAmount, setExpenseAmount] = useState("")
+  const [editingId, setEditingId] = useState(null)
   const firstName = "Vishal"
   const secondName = "sharma"
   const expense = 2000
@@ -45,18 +47,50 @@ function App() {
       alert("Please enter both expense name and amount")
       return
     }
-    setExpenseList(prev =>  [
-      ...prev,
-      {id: prev.length+1, name: expenseName, amount: Number(expenseAmount) }
-    ] )
+    if(editingId===null){
+      setExpenseList(prev =>  [
+        ...prev,
+        {id: prev.length+1, name: expenseName, amount: Number(expenseAmount) }
+      ] )
+    } else {
+      setExpenseList(prev => {
+        let updatedList = []
+        for(let i=0 ; i<prev.length ; i++){
+          if(prev[i].id === editingId){
+            updatedList.push({id: prev[i].id, name: expenseName, amount: Number(expenseAmount)})
+          }else{
+            updatedList.push(prev[i])
+          }
+        }
+        return updatedList      
+      })
+    }
     setExpenseName("")
     setExpenseAmount("")
+    setEditingId(null)
   }
 
   function handleDeleteExpense(id) {
     setExpenseList(prev =>
-      prev.filter(expense => expense.id != id)
+      prev.filter(expense => expense.id !== id)
     )
+  }
+
+  function handleEditExpense(id) {
+    let selectedExpense
+
+    for (let i = 0; i < expenseList.length; i++) {
+      if (expenseList[i].id === id) {
+        selectedExpense = expenseList[i]
+        break
+      }
+    }
+
+    if (selectedExpense) {
+      setExpenseName(selectedExpense.name)
+      setExpenseAmount(String(selectedExpense.amount))
+      setEditingId(id)
+    }
   }
 
   return (
@@ -69,7 +103,8 @@ function App() {
           id = {expenses.id}
           name={expenses.name} 
           amount={expenses.amount}
-          onDelete={handleDeleteExpense} />
+          onDelete={handleDeleteExpense}
+          onEdit={handleEditExpense} />
       ))}
 
       <p>Expense Count: {expenseList.length}</p>
@@ -80,10 +115,11 @@ function App() {
 
       <input type="text" placeholder = "Enter the Expense Amount" value={expenseAmount} onChange = {(event) => setExpenseAmount(event.target.value)} />
       <br/>
-      <button onClick= {handleAddExpense}>Add Expense</button>
+      <button onClick= {handleAddExpense}>{editingId !== null ? "Update Expense" : "Add Expense"}</button>
 
       <br/>
-      <p>Total Expenses: ₹{summation(expenseList)}</p>      
+      <p>Total Expenses: ₹{summation(expenseList)}</p>   
+   
 
     </div>
   )
