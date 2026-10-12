@@ -42,6 +42,16 @@ function App() {
     {id: 5,name: "Miscellaneous", amount: 600 }
   ])
 
+  function getNextid(expenseList){
+    let maxId = 0
+    for(let i=0 ; i<expenseList.length ; i++){
+      if(expenseList[i].id > maxId){
+        maxId = expenseList[i].id
+      }
+    }
+    return maxId + 1
+  }
+
   function handleAddExpense() {
     if(!expenseName.trim() || Number(expenseAmount) <= 0 || isNaN(Number(expenseAmount))) {
       alert("Please enter both expense name and amount")
@@ -50,7 +60,7 @@ function App() {
     if(editingId===null){
       setExpenseList(prev =>  [
         ...prev,
-        {id: prev.length+1, name: expenseName, amount: Number(expenseAmount) }
+        {id: getNextid(prev), name: expenseName, amount: Number(expenseAmount) }
       ] )
     } else {
       setExpenseList(prev => {
