@@ -1,4 +1,5 @@
 import {useState} from "react"
+console.log("App.jsx is running")
 function Header({name, lastName, Expense}) {
   return (
     <div>
@@ -28,6 +29,8 @@ function summation(expenseList) {
 }
 
 function App() {
+  console.log("App component rendered");
+  
   const [expenseName, setExpenseName] = useState("")
   const [expenseAmount, setExpenseAmount] = useState("")
   const [editingId, setEditingId] = useState(null)
@@ -52,7 +55,9 @@ function App() {
     return maxId + 1
   }
 
-  function handleAddExpense() {
+  function handleAddExpense(event) {
+    event.preventDefault()
+    console.log("working")
     if(!expenseName.trim() || Number(expenseAmount) <= 0 || isNaN(Number(expenseAmount))) {
       alert("Please enter both expense name and amount")
       return
@@ -119,13 +124,27 @@ function App() {
 
       <p>Expense Count: {expenseList.length}</p>
       
-      <br/>
-      <input type="text" placeholder="Enter Expense Name" value={expenseName}
-      onChange = {(event) => setExpenseName(event.target.value)}/>
+      <form onSubmit={handleAddExpense}>
+        <input
+          type="text"
+          placeholder="Enter Expense Name"
+          value={expenseName}
+          onChange={(event) => setExpenseName(event.target.value)}
+          required
+        />
 
-      <input type="text" placeholder = "Enter the Expense Amount" value={expenseAmount} onChange = {(event) => setExpenseAmount(event.target.value)} />
-      <br/>
-      <button onClick= {handleAddExpense}>{editingId !== null ? "Update Expense" : "Add Expense"}</button>
+        <input
+          type="number"
+          placeholder="Enter the Expense Amount"
+          value={expenseAmount}
+          onChange={(event) => setExpenseAmount(event.target.value)}
+          required
+        />
+
+        <button type="submit">
+          {editingId === null ? "Add Expense" : "Update Expense"}
+        </button>
+      </form>
 
       <br/>
       <p>Total Expenses: ₹{summation(expenseList)}</p>   
