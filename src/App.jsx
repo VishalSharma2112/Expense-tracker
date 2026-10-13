@@ -1,5 +1,4 @@
-import {useState} from "react"
-console.log("App.jsx is running")
+import {useState, useEffect} from "react"
 function Header({name, lastName, Expense}) {
   return (
     <div>
@@ -37,13 +36,23 @@ function App() {
   const firstName = "Vishal"
   const secondName = "sharma"
   const expense = 2000
-  const [expenseList, setExpenseList] = useState([
-    {id: 1,name: "Food", amount: 500 },
-    {id: 2,name: "Transport", amount: 300 },
-    {id: 3,name: "Entertainment", amount: 200 },
-    {id: 4,name: "Utilities", amount: 400 },
-    {id: 5,name: "Miscellaneous", amount: 600 }
-  ])
+  const [expenseList, setExpenseList] = useState(() => {
+    const savedExpenses = localStorage.getItem("expense");
+
+    if (savedExpenses !== null){
+      return JSON.parse(savedExpenses)
+    }
+    return [
+      {id: 1,name: "Food", amount: 500 },
+      {id: 2,name: "Transport", amount: 300 },
+      {id: 3,name: "Entertainment", amount: 200 },
+      {id: 4,name: "Utilities", amount: 400 },
+      {id: 5,name: "Miscellaneous", amount: 600 }
+    ]
+  })
+  useEffect(() => {
+    localStorage.setItem("expense", JSON.stringify(expenseList));
+  }, [expenseList]);
 
   function getNextid(expenseList){
     let maxId = 0
