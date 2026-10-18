@@ -1,23 +1,7 @@
 import {useState, useEffect} from "react"
-function Header({name, lastName, Expense}) {
-  return (
-    <div>
-      <h1>Expense Tracker</h1>
-      <p>Hello {name} {lastName}!</p>
-      <p>Expense: {Expense}</p>
-    </div>
-  )
-}
+import Header from "./components/header.jsx"
+import ExpenseItem from "./components/ExpenseItem.jsx"
 
-function ExpenseItem({id, name, amount, onDelete, onEdit}) {
-  return (
-    <div>
-      <p>ID={id}, Name={name}, Amount={amount}</p>
-      <button onClick={() => onDelete(id)}>Delete</button>
-      <button onClick={() => onEdit(id)}>Edit</button>
-    </div>
-  )
-}
 
 function summation(expenseList) {
   let total = 0
