@@ -1,7 +1,10 @@
 import {useState, useEffect} from "react"
 import Header from "./components/header.jsx"
 import ExpenseItem from "./components/ExpenseItem.jsx"
-
+import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom"
+import Dashboard from "./pages/Dashboards"
+import Transactions from "./pages/Transactions"
+import SavingsGoals from "./pages/SavingsGoals"
 
 function summation(expenseList) {
   let total = 0
@@ -124,49 +127,15 @@ function App() {
   }
 
   return (
-    <div>
-      <Header name={firstName} lastName={secondName} Expense={expense} />
-    
-      {expenseList.map((expenses) => (
-        <ExpenseItem 
-          key = {expenses.id}
-          id = {expenses.id}
-          name={expenses.name} 
-          amount={expenses.amount}
-          onDelete={handleDeleteExpense}
-          onEdit={handleEditExpense} />
-      ))}
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/transactions" element={<Transactions />} />
+        <Route path="/savings" element={<SavingsGoals />} />
 
-      <p>Expense Count: {expenseList.length}</p>
-      
-      <form onSubmit={handleAddExpense}>
-        <input
-          type="text"
-          placeholder="Enter Expense Name"
-          value={expenseName}
-          onChange={(event) => setExpenseName(event.target.value)}
-          required
-        />
-
-        <input
-          type="number"
-          placeholder="Enter the Expense Amount"
-          value={expenseAmount}
-          onChange={(event) => setExpenseAmount(event.target.value)}
-          required
-        />
-
-        <button type="submit">
-          {editingId === null ? "Add Expense" : "Update Expense"}
-        </button>
-      </form>
-
-      <br/>
-      <p>Total Expenses: ₹{summation(expenseList)}</p>   
-      <p>{hrs}:{minutes}:{seconds}</p>
-   
-
-    </div>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
