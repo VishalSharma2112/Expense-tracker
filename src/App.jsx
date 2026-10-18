@@ -27,11 +27,34 @@ function summation(expenseList) {
   return total
 }
 
-function App() {
-  console.log("App component rendered");
-  
+function App() {  
   const [expenseName, setExpenseName] = useState("")
   const [expenseAmount, setExpenseAmount] = useState("")
+
+  const [seconds, setSeconds] = useState(40)
+    useEffect(() => {
+    const timer = setTimeout(() => {
+      setSeconds(prevSeconds => prevSeconds + 1)
+    }, 1000)
+
+    return () => {
+      clearTimeout(timer);
+    }
+  });
+  const [minutes, setMinutes] = useState(59)
+  useEffect(() => {
+    if(seconds === 60){
+      setSeconds(0)
+      setMinutes(prev => prev + 1)
+    }
+  }, [seconds])
+  const [hrs, setHrs] = useState(0)
+  useEffect(() => {
+    if(minutes === 60){
+      setMinutes(0)
+      setHrs(prev => prev + 1)
+    }
+  }, [minutes])
   const [editingId, setEditingId] = useState(null)
   const firstName = "Vishal"
   const secondName = "sharma"
@@ -66,7 +89,6 @@ function App() {
 
   function handleAddExpense(event) {
     event.preventDefault()
-    console.log("working")
     if(!expenseName.trim() || Number(expenseAmount) <= 0 || isNaN(Number(expenseAmount))) {
       alert("Please enter both expense name and amount")
       return
@@ -157,6 +179,7 @@ function App() {
 
       <br/>
       <p>Total Expenses: ₹{summation(expenseList)}</p>   
+      <p>{hrs}:{minutes}:{seconds}</p>
    
 
     </div>
